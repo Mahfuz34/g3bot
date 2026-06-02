@@ -26,7 +26,7 @@ async def on_message(message):
                                 "Authorization": f"Bearer {os.environ['OPENROUTER_API_KEY']}"
                             },
                             json={
-                                "model": "google/gemini-2.5-flash-lite",
+                                "model": "google/gemini-2.5-flash",
                                 "messages": [{"role": "user", "content": prompt}],
                                 "plugins": [{"id": "web"}]
                             },
