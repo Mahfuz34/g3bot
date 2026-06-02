@@ -12,9 +12,11 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
+    print(f"Message received from {message.author}: {message.content}")
     if message.author == client.user:
         return
     if client.user in message.mentions:
+        print("Bot was mentioned, sending to Gemini...")
         prompt = message.content.replace(f"<@{client.user.id}>", "").strip()
         if prompt:
             async with message.channel.typing():
@@ -30,12 +32,14 @@ async def on_message(message):
                             timeout=30
                         )
                         data = r.json()
+                        print(f"OpenRouter response: {data}")
                         if "choices" in data:
                             reply = data["choices"][0]["message"]["content"]
                         else:
                             reply = str(data)
                         await message.reply(reply)
                 except Exception as e:
+                    print(f"Error: {str(e)}")
                     await message.reply(f"Error: {str(e)}")
 
 client.run(os.environ["DISCORD_TOKEN"])
