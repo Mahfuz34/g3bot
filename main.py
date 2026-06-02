@@ -1,9 +1,6 @@
 import discord
-import google.generativeai as genai
 import os
-
-genai.configure(api_key=os.environ["GEMINI_API_KEY"])
-model = genai.GenerativeModel("gemini-2.0-flash")
+import httpx
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -22,8 +19,19 @@ async def on_message(message):
         if prompt:
             async with message.channel.typing():
                 try:
-                    response = model.generate_content(prompt)
-                    await message.reply(response.text)
+                    async with httpx.AsyncClient() as http:
+                        r = await http.post(
+                            "https://openrouter.ai/api/v1/chat/completions",
+                            headers={"Authorization": f"Bearer {os.environ['OPENROUTER_API_KEY']}"},
+                            json={
+                                "model": "google/gemini-2.0-flash-001",
+                                "messages": [{"role": "user", "content": prompt}]
+                            },
+                            timeout=30
+                        )
+                        data = r.json()
+                        reply = data["choices"][0]["message"]["content"]
+                        await message.reply(reply)
                 except Exception as e:
                     await message.reply(f"Error: {str(e)}")
 
