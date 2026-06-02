@@ -24,7 +24,7 @@ async def on_message(message):
                             "https://openrouter.ai/api/v1/chat/completions",
                             headers={"Authorization": f"Bearer {os.environ['OPENROUTER_API_KEY']}"},
                             json={
-                                "model": "google/gemini-2.0-flash-001",
+                                "model": "google/gemini-2.0-flash-exp:free",
                                 "messages": [{"role": "user", "content": prompt}]
                             },
                             timeout=30
@@ -35,6 +35,10 @@ async def on_message(message):
                         else:
                             reply = str(data)
                         await message.reply(reply)
+                except Exception as e:
+                    await message.reply(f"Error: {str(e)}")
+
+client.run(os.environ["DISCORD_TOKEN"])                        await message.reply(reply)
                 except Exception as e:
                     await message.reply(f"Error: {str(e)}")
 
