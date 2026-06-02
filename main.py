@@ -21,7 +21,10 @@ async def on_message(message):
         prompt = message.content.replace(f"<@{client.user.id}>", "").strip()
         if prompt:
             async with message.channel.typing():
-                response = model.generate_content(prompt)
-                await message.reply(response.text)
+                try:
+                    response = model.generate_content(prompt)
+                    await message.reply(response.text)
+                except Exception as e:
+                    await message.reply(f"Error: {str(e)}")
 
 client.run(os.environ["DISCORD_TOKEN"])
