@@ -38,8 +38,4 @@ async def on_message(message):
                 except Exception as e:
                     await message.reply(f"Error: {str(e)}")
 
-client.run(os.environ["DISCORD_TOKEN"])                        await message.reply(reply)
-                except Exception as e:
-                    await message.reply(f"Error: {str(e)}")
-
 client.run(os.environ["DISCORD_TOKEN"])
