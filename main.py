@@ -6,6 +6,15 @@ intents = discord.Intents.default()
 intents.message_content = True
 client = discord.Client(intents=intents)
 
+SYSTEM_PROMPT = """You are a sharp, concise financial and market analyst assistant. 
+When asked about stocks, crypto, or market moves:
+- Search the web for the latest news and data first
+- Give a direct, confident answer based on what you find
+- Keep it short and punchy — 3 to 5 sentences max
+- Lead with the actual reason, not disclaimers
+- No fluff, no "I need more info", no generic lists
+- Write like a trader talking to another trader"""
+
 @client.event
 async def on_ready():
     print(f"Logged in as {client.user}")
@@ -27,7 +36,10 @@ async def on_message(message):
                             },
                             json={
                                 "model": "google/gemini-2.5-flash",
-                                "messages": [{"role": "user", "content": prompt}],
+                                "messages": [
+                                    {"role": "system", "content": SYSTEM_PROMPT},
+                                    {"role": "user", "content": prompt}
+                                ],
                                 "plugins": [{"id": "web"}]
                             },
                             timeout=60
@@ -36,7 +48,7 @@ async def on_message(message):
                         if "choices" in data:
                             reply = data["choices"][0]["message"]["content"]
                             if len(reply) > 1900:
-                                reply = reply[:1900] + "...\n*(response too long, ask me to continue)*"
+                                reply = reply[:1900] + "...\n*(ask me to continue)*"
                         else:
                             reply = str(data)
                         await message.reply(reply)
