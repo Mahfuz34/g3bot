@@ -30,7 +30,10 @@ async def on_message(message):
                             timeout=30
                         )
                         data = r.json()
-                        reply = data["choices"][0]["message"]["content"]
+                        if "choices" in data:
+                            reply = data["choices"][0]["message"]["content"]
+                        else:
+                            reply = str(data)
                         await message.reply(reply)
                 except Exception as e:
                     await message.reply(f"Error: {str(e)}")
