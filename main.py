@@ -24,7 +24,7 @@ async def on_message(message):
                             "https://openrouter.ai/api/v1/chat/completions",
                             headers={"Authorization": f"Bearer {os.environ['OPENROUTER_API_KEY']}"},
                             json={
-                                "model": "meta-llama/llama-3.1-8b-instruct:free",
+                                "model": "google/gemini-2.5-flash-lite",
                                 "messages": [{"role": "user", "content": prompt}]
                             },
                             timeout=30
