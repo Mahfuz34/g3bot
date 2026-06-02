@@ -6,13 +6,13 @@ intents = discord.Intents.default()
 intents.message_content = True
 client = discord.Client(intents=intents)
 
-SYSTEM_PROMPT = """You are a sharp, concise financial and market analyst assistant. 
+SYSTEM_PROMPT = """You are a sharp, concise financial and market analyst assistant.
 When asked about stocks, crypto, or market moves:
 - Search the web for the latest news and data first
 - Give a direct, confident answer based on what you find
 - Keep it short and punchy — 3 to 5 sentences max
 - Lead with the actual reason, not disclaimers
-- No fluff, no "I need more info", no generic lists
+- No fluff, no generic lists
 - Write like a trader talking to another trader"""
 
 @client.event
@@ -35,12 +35,11 @@ async def on_message(message):
                                 "Authorization": f"Bearer {os.environ['OPENROUTER_API_KEY']}"
                             },
                             json={
-                                "model": "google/gemini-2.5-flash",
+                                "model": "perplexity/sonar",
                                 "messages": [
                                     {"role": "system", "content": SYSTEM_PROMPT},
                                     {"role": "user", "content": prompt}
-                                ],
-                                "plugins": [{"id": "web"}]
+                                ]
                             },
                             timeout=60
                         )
